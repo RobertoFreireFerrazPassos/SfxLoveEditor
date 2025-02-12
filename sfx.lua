@@ -101,7 +101,9 @@ function Sound:add(id, noteSequence, multiplier)
             
             -- Waveform generation
             if note.wave == "sine" then
-                sample = math.sin(2 * math.pi * note.freq * t)
+                sample = math.abs(math.sin(2 * math.pi * note.freq * t))
+                local step_size = 0.2
+                sample = math.floor(sample / step_size + 0.5) * step_size
             elseif note.wave == "square" then
                 sample = (math.sin(2 * math.pi * note.freq * t) >= 0) and 1 or -1
             elseif note.wave == "saw" then
