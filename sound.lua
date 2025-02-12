@@ -2,107 +2,86 @@ local Sound = {}
 
 function Sound:new()
     local obj = {
+        sounds = {},
         currentSound = nil,
-        sequence = {},
-        currentIndex = 1,
-        timer = 0,
-        isPlayingSequence = false,
-        speedMultiplier = 1.0  -- Default playback speed
     }
     setmetatable(obj, self)
     self.__index = self
     return obj
 end
 
-function Sound:generateSound(waveType, freq, duration)
+function Sound:add(id, noteSequence, multiplier)
+    if #noteSequence == 0 then return end
+
+    local speedMultiplier = math.max(0.5, math.min(multiplier, 5.0))
     local rate = 44100
-    local numSamples = math.floor(rate * duration)
-    local soundData = love.sound.newSoundData(numSamples, rate, 16, 1)
+    local totalSamples = 0
+    local sequence = {}
 
-    for i = 0, numSamples - 1 do
-        local t = i / rate
-        local sample = 0
-        
-        -- Waveform generation
-        if waveType == "sine" then
-            sample = math.sin(2 * math.pi * freq * t)
-        elseif waveType == "square" then
-            sample = (math.sin(2 * math.pi * freq * t) >= 0) and 1 or -1
-        elseif waveType == "saw" then
-            sample = 2 * (t * freq - math.floor(t * freq + 0.5))
-        elseif waveType == "noise" then
-            sample = love.math.random() * 2 - 1
-        end
-
-        -- Apply fade-out effect: volume decreases towards the end of the sound
-        local fadeOutStart = numSamples - (rate * 0.1)  -- Start fading out 0.1 seconds before the end
-        local fadeFactor = 1
-        
-        if i >= fadeOutStart then
-            fadeFactor = 1 - ((i - fadeOutStart) / (numSamples - fadeOutStart))
-        end
-        
-        soundData:setSample(i, sample * 0.5 * fadeFactor) -- Volume control with fade-out
+    -- Preprocess each note: adjust duration to full cycles and compute effective duration.
+    for _, note in ipairs(noteSequence) do
+        local cycleDuration = 1 / note.freq
+        local adjustedDuration = math.floor(note.duration / cycleDuration) * cycleDuration
+        if adjustedDuration == 0 then adjustedDuration = cycleDuration end
+        -- Scale the note duration by the speed multiplier (playing faster if multiplier > 1)
+        local effectiveDuration = adjustedDuration / speedMultiplier
+        local numSamples = math.floor(rate * effectiveDuration)
+        totalSamples = totalSamples + numSamples
+        table.insert(sequence, {
+            wave = note.wave,
+            freq = note.freq,
+            duration = effectiveDuration,
+            numSamples = numSamples
+        })
     end
-    
-    return soundData
+
+    -- Create a new SoundData buffer for the whole melody.
+    local soundData = love.sound.newSoundData(totalSamples, rate, 16, 1)
+    local sampleIndex = 0
+
+    -- For each note, generate its samples and append them into the overall SoundData.
+    for _, note in ipairs(sequence) do
+        for i = 0, note.numSamples - 1 do
+            local t = i / rate  -- time (in seconds) within this note
+            local sample = 0
+            
+            -- Waveform generation
+            if note.wave == "sine" then
+                sample = math.sin(2 * math.pi * note.freq * t)
+            elseif note.wave == "square" then
+                sample = (math.sin(2 * math.pi * note.freq * t) >= 0) and 1 or -1
+            elseif note.wave == "saw" then
+                sample = 2 * (t * note.freq - math.floor(t * note.freq + 0.5))
+            elseif note.wave == "noise" then
+                sample = love.math.random() * 2 - 1
+            end
+
+            -- Optionally apply a very short fade-out at the end of each note
+            local fadeSamples = math.floor(rate * 0.005)  -- 5ms fade-out
+            local fadeFactor = 1
+            if i >= note.numSamples - fadeSamples then
+                fadeFactor = 1 - ((i - (note.numSamples - fadeSamples)) / fadeSamples)
+            end
+
+            soundData:setSample(sampleIndex, sample * 0.5 * fadeFactor)
+            sampleIndex = sampleIndex + 1
+        end
+    end
+
+    -- Create and play the continuous melody as one sound source.
+    self.sounds[id] = love.audio.newSource(soundData, "static")
 end
 
-function Sound:play(waveType, freq, duration)
-    local soundData = self:generateSound(waveType, freq, duration)
-    local source = love.audio.newSource(soundData, "static")
-    source:play()
-    
-    self.currentSound = source
+function Sound:play(id)    
+    self.sounds[id]:play()
+    self.currentSound = id
 end
 
 function Sound:stop()
     if self.currentSound then
-        self.currentSound:stop()
+        self.sounds[self.currentSound]:stop()
     end
-    self.isPlayingSequence = false
-    self.currentIndex = 1
-    self.sequence = {}
-end
-
-function Sound:playSequence(noteSequence, multiplier)
-    if #noteSequence == 0 then return end
-
-    self.sequence = {}
-    self.speedMultiplier = math.max(0.5, math.min(multiplier, 5.0))
-
-    -- Adjust each note's duration to fit full cycles
-    for _, note in ipairs(noteSequence) do
-        local cycleDuration = 1 / note.freq
-        local adjustedDuration = math.floor(note.duration / cycleDuration) * cycleDuration
-        if adjustedDuration == 0 then adjustedDuration = cycleDuration end  -- Ensure at least one cycle
-
-        table.insert(self.sequence, {
-            wave = note.wave,
-            freq = note.freq,
-            duration = adjustedDuration
-        })
-    end
-
-    self.currentIndex = 1
-    self.timer = 0
-    self.isPlayingSequence = true
-end
-
-function Sound:update(dt)
-    if self.isPlayingSequence and #self.sequence > 0 then
-        self.timer = self.timer - (dt * self.speedMultiplier)  -- Adjust timing by speed
-        if self.timer <= 0 then
-            local note = self.sequence[self.currentIndex]
-            self:play(note.wave, note.freq, note.duration)
-            self.timer = note.duration / self.speedMultiplier  -- Adjust duration by speed
-            self.currentIndex = self.currentIndex + 1
-
-            if self.currentIndex > #self.sequence then
-                self.isPlayingSequence = false
-            end
-        end
-    end
+    self.currentSound = nil
 end
 
 return Sound

@@ -8,8 +8,8 @@ function love.load()
     
     -- Define a simple melody using {wave, frequency, duration}
     melody = {
-        { wave = "sine", freq = 261.63, duration = 0.382 }, -- C4
-        { wave = "sine", freq = 261.63, duration = 0.382 }, -- C4
+        { wave = "sine", freq = 261.63, duration = 0.4 }, -- C4
+        { wave = "sine", freq = 261.63, duration = 0.4 }, -- C4
         { wave = "sine", freq = 392.00, duration = 0.4 }, -- G4
         { wave = "sine", freq = 392.00, duration = 0.4 }, -- G4
         { wave = "sine", freq = 440.00, duration = 0.4 }, -- A4
@@ -44,24 +44,26 @@ function love.load()
         { wave = "sine", freq = 800.00, duration = 0.05 },
         { wave = "sine", freq = 1000.00, duration = 0.05 }
     }
-    
+
+    soundPlayer:add("die", die_sfx, 1)
+    soundPlayer:add("melody", melody, 1)
+    soundPlayer:add("die2", die_sfx, 5)
+    soundPlayer:add("melody2", melody, 5)
 end
 
 function love.keypressed(key)
-    if key == "p" then
-        soundPlayer:playSequence(melody, 5) -- Play the sequence
+    if key == "q" then
+        soundPlayer:play("die")
+    elseif key == "w" then
+        soundPlayer:play("melody")
+    elseif key == "a" then
+        soundPlayer:play("die2")
     elseif key == "s" then
+        soundPlayer:play("melody2")
+    elseif key == "e" then
         soundPlayer:stop() -- Stop playing
     end
 end
 
 function love.update(dt)
-    soundPlayer:update(dt)
-end
-
-function love.draw()
-    love.graphics.print(soundPlayer.timer,10,10);
-    love.graphics.print(tostring(soundPlayer.isPlayingSequence),10,30);
-    love.graphics.print(#soundPlayer.sequence,10,50);
-    love.graphics.print(soundPlayer.currentIndex,10,70);
 end
