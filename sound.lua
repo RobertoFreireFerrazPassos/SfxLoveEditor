@@ -31,7 +31,8 @@ function Sound:add(id, noteSequence, multiplier)
             wave = note.wave,
             freq = note.freq,
             duration = effectiveDuration,
-            numSamples = numSamples
+            numSamples = numSamples,
+            volume = note.volume or 1.0  -- Set the volume for the note (default 1.0)
         })
     end
 
@@ -63,12 +64,12 @@ function Sound:add(id, noteSequence, multiplier)
                 fadeFactor = 1 - ((i - (note.numSamples - fadeSamples)) / fadeSamples)
             end
 
-            soundData:setSample(sampleIndex, sample * 0.5 * fadeFactor)
+            -- Multiply sample by note.volume (and a constant factor 0.5 and fade factor)
+            soundData:setSample(sampleIndex, sample * note.volume * 0.5 * fadeFactor)
             sampleIndex = sampleIndex + 1
         end
     end
 
-    -- Create and play the continuous melody as one sound source.
     self.sounds[id] = love.audio.newSource(soundData, "static")
 end
 

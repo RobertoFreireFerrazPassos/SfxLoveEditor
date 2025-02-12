@@ -6,44 +6,43 @@ local Sound = require("sound")
 function love.load()
     soundPlayer = Sound:new()
     
-    -- Define a simple melody using {wave, frequency, duration}
     melody = {
-        { wave = "sine", freq = 261.63, duration = 0.4 }, -- C4
-        { wave = "sine", freq = 261.63, duration = 0.4 }, -- C4
-        { wave = "sine", freq = 392.00, duration = 0.4 }, -- G4
-        { wave = "sine", freq = 392.00, duration = 0.4 }, -- G4
-        { wave = "sine", freq = 440.00, duration = 0.4 }, -- A4
-        { wave = "sine", freq = 440.00, duration = 0.4 }, -- A4
-        { wave = "sine", freq = 392.00, duration = 0.8 }, -- G4 (longer)
+        { wave = "sine", freq = 261.63, duration = 0.4, volume = 1.0 }, -- C4
+        { wave = "sine", freq = 261.63, duration = 0.4, volume = 1.0 }, -- C4
+        { wave = "sine", freq = 392.00, duration = 0.4, volume = 1.0 }, -- G4
+        { wave = "sine", freq = 392.00, duration = 0.4, volume = 0.6 }, -- G4
+        { wave = "sine", freq = 440.00, duration = 0.4, volume = 0.6 }, -- A4
+        { wave = "sine", freq = 440.00, duration = 0.4, volume = 0.4 }, -- A4
+        { wave = "sine", freq = 392.00, duration = 0.8, volume = 0.4 }, -- G4 (longer)
     
-        { wave = "sine", freq = 349.23, duration = 0.4 }, -- F4
-        { wave = "sine", freq = 349.23, duration = 0.4 }, -- F4
-        { wave = "sine", freq = 330.00, duration = 0.4 }, -- E4
-        { wave = "sine", freq = 330.00, duration = 0.4 }, -- E4
-        { wave = "sine", freq = 293.66, duration = 0.4 }, -- D4
-        { wave = "sine", freq = 293.66, duration = 0.4 }, -- D4
-        { wave = "sine", freq = 261.63, duration = 0.8 }, -- C4 (longer)
+        { wave = "sine", freq = 349.23, duration = 0.4, volume = 1.0 }, -- F4
+        { wave = "sine", freq = 349.23, duration = 0.4, volume = 0.2 }, -- F4
+        { wave = "sine", freq = 330.00, duration = 0.4, volume = 0.2 }, -- E4
+        { wave = "sine", freq = 330.00, duration = 0.4, volume = 1.0 }, -- E4
+        { wave = "sine", freq = 293.66, duration = 0.4, volume = 1.0 }, -- D4
+        { wave = "sine", freq = 293.66, duration = 0.4, volume = 1.0 }, -- D4
+        { wave = "sine", freq = 261.63, duration = 0.8, volume = 1.0 }, -- C4 (longer)
     }
-
+    
     jump_sfx = {
-        { wave = "sine", freq = 200.00, duration = 0.05 },
-        { wave = "sine", freq = 300.00, duration = 0.05 },
-        { wave = "sine", freq = 400.00, duration = 0.05 },
-        { wave = "sine", freq = 500.00, duration = 0.05 }
+        { wave = "sine", freq = 200.00, duration = 0.05, volume = 1.0 },
+        { wave = "sine", freq = 300.00, duration = 0.05, volume = 1.0 },
+        { wave = "sine", freq = 400.00, duration = 0.05, volume = 0.2 },
+        { wave = "sine", freq = 500.00, duration = 0.05, volume = 0.2 }
     }
-
+    
     die_sfx = {
-        { wave = "sine", freq = 600.00, duration = 0.1 },
-        { wave = "sine", freq = 500.00, duration = 0.1 },
-        { wave = "sine", freq = 400.00, duration = 0.1 },
-        { wave = "sine", freq = 300.00, duration = 0.1 },
-        { wave = "sine", freq = 200.00, duration = 0.1 }
-    }    
+        { wave = "sine", freq = 600.00, duration = 0.1, volume = 1.0 },
+        { wave = "sine", freq = 500.00, duration = 0.1, volume = 1.0 },
+        { wave = "sine", freq = 400.00, duration = 0.1, volume = 1.0 },
+        { wave = "sine", freq = 300.00, duration = 0.1, volume = 0.2 },
+        { wave = "sine", freq = 200.00, duration = 0.1, volume = 0.2 }
+    }
     
     coin_sfx = {
-        { wave = "sine", freq = 800.00, duration = 0.05 },
-        { wave = "sine", freq = 1000.00, duration = 0.05 }
-    }
+        { wave = "sine", freq = 800.00, duration = 0.05, volume = 1.0 },
+        { wave = "sine", freq = 1000.00, duration = 0.05, volume = 1.0 }
+    }    
 
     soundPlayer:add("die", die_sfx, 1)
     soundPlayer:add("melody", melody, 1)
