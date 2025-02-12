@@ -5,6 +5,7 @@ local sfx = require("sfx")
 local Sound = sfx.Sound
 local pitches = sfx.Pitches
 local Waveforms = sfx.Waveforms
+local Effects = sfx.Effects
 
 function love.load()
     soundPlayer = Sound:new()
@@ -29,18 +30,18 @@ function love.load()
     }
     
     jump_sfx = {
-        { wave = wave, freq = pitches.G3, volume = 1.0 },
+        { wave = wave, freq = pitches.G3, volume = 1.0},
         { wave = wave, freq = pitches.D4, volume = 1.0 },
         { wave = wave, freq = pitches.F4, volume = 0.2 },
         { wave = wave, freq = pitches.A4, volume = 0.2 }
     }
     
     die_sfx = {
-        { wave = wave, freq = pitches.B4, volume = 1.0 },
-        { wave = wave, freq = pitches.A4, volume = 1.0 },
-        { wave = wave, freq = pitches.F4, volume = 1.0 },
-        { wave = wave, freq = pitches.D4, volume = 0.2 },
-        { wave = wave, freq = pitches.G3, volume = 0.2 }
+        { wave = wave, freq = pitches.B4, volume = 1.0, effect = Effects.None },
+        { wave = wave, freq = pitches.A4, volume = 1.0, effect = Effects.Slide },
+        { wave = wave, freq = pitches.F4, volume = 1.0, effect = Effects.Slide },
+        { wave = wave, freq = pitches.D4, volume = 1, effect = Effects.None },
+        { wave = wave, freq = pitches.G3, volume = 1, effect = Effects.None }
     }
     
     coin_sfx = {

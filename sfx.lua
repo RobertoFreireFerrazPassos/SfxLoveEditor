@@ -54,6 +54,16 @@ local Pitches = {
     B4 = 494,   -- B-4
 }
 
+local Effects = {
+    None = "None",
+    Slide = "Slide",
+    Vibrato = "Vibrato",
+    Drop = "Drop",
+    FadeIn = "FadeIn",
+    FadeOut = "FadeOut",
+    Arpeggio = "Arpeggio",
+}
+
 function Sound:new()
     local obj = {
         sounds = {},
@@ -71,68 +81,79 @@ function Sound:add(id, noteSequence, multiplier)
     local totalSamples = 0
     local sequence = {}
 
-    for _, note in ipairs(noteSequence) do
+    for i, note in ipairs(noteSequence) do
+        local prevNote = noteSequence[i - 1]  -- Get the previous note (if it exists)
         local cycleDuration = 1 / note.freq
         local adjustedDuration = math.floor(0.5 / cycleDuration) * cycleDuration
         if adjustedDuration == 0 then adjustedDuration = cycleDuration end
         local effectiveDuration = adjustedDuration / speedMultiplier
         local numSamples = math.floor(rate * effectiveDuration)
         totalSamples = totalSamples + numSamples
+
         table.insert(sequence, {
             wave = note.wave,
             freq = note.freq,
             duration = effectiveDuration,
             numSamples = numSamples,
-            volume = note.volume or 1.0  -- Set the volume for the note (default 1.0)
+            volume = note.volume or 1.0,
+            effect = note.effect or 0, -- Use the effect parameter (default to 0)
+            prevFreq = prevNote and prevNote.freq or note.freq, -- Store previous frequency for sliding
         })
     end
 
-    -- Create a new SoundData buffer for the whole melody.
+    -- Create a new SoundData buffer
     local soundData = love.sound.newSoundData(totalSamples, rate, 16, 1)
     local sampleIndex = 0
 
-    -- For each note, generate its samples and append them into the overall SoundData.
+    -- Generate samples for each note
     for _, note in ipairs(sequence) do
         for i = 0, note.numSamples - 1 do
-            local t = i / rate  -- time (in seconds) within this note
+            local t = i / rate
             local sample = 0
-            
+
+            -- Determine the frequency (apply slide effect if effect == 1)
+            local currentFreq = note.freq
+            if note.effect == Effects.Slide then
+                local slideFactor = i / note.numSamples
+                currentFreq = note.prevFreq + (note.freq - note.prevFreq) * slideFactor
+            end
+
             -- Waveform generation
             if note.wave == "sine" then
-                sample = math.abs(math.sin(2 * math.pi * note.freq * t))
+                sample = math.abs(math.sin(2 * math.pi * currentFreq * t))
                 local step_size = 0.2
                 sample = math.floor(sample / step_size + 0.5) * step_size
             elseif note.wave == "square" then
-                sample = (math.sin(2 * math.pi * note.freq * t) >= 0) and 1 or -1
+                sample = (math.sin(2 * math.pi * currentFreq * t) >= 0) and 1 or -1
             elseif note.wave == "saw" then
-                sample = 2 * (t * note.freq - math.floor(t * note.freq + 0.5))
+                sample = 2 * (t * currentFreq - math.floor(t * currentFreq + 0.5))
             elseif note.wave == "noise" then
                 sample = love.math.random() * 2 - 1
             elseif note.wave == "pulse" then
                 local duty = note.duty or 0.5
-                local phase = (t * note.freq) % 1
+                local phase = (t * currentFreq) % 1
                 sample = (phase < duty) and 1 or -1
             elseif note.wave == "organ" then
-                local fundamental = math.sin(2 * math.pi * note.freq * t)
-                local secondHarmonic = 0.5 * math.sin(2 * math.pi * note.freq * 2 * t)
-                local thirdHarmonic = 0.33 * math.sin(2 * math.pi * note.freq * 3 * t)
+                local fundamental = math.sin(2 * math.pi * currentFreq * t)
+                local secondHarmonic = 0.5 * math.sin(2 * math.pi * currentFreq * 2 * t)
+                local thirdHarmonic = 0.33 * math.sin(2 * math.pi * currentFreq * 3 * t)
                 sample = (fundamental + secondHarmonic + thirdHarmonic) / (1 + 0.5 + 0.33)
             elseif note.wave == "phaser" then
-                local phaserSpeed = note.phaserSpeed or 0.5   -- LFO frequency in Hz
-                local phaserDepth = note.phaserDepth or 0.5     -- Maximum phase offset (0-1)
+                local phaserSpeed = note.phaserSpeed or 0.5
+                local phaserDepth = note.phaserDepth or 0.5
                 local lfo = math.sin(2 * math.pi * phaserSpeed * t)
-                local phaseOffset = lfo * phaserDepth * math.pi -- Scale offset by pi
-                sample = math.sin(2 * math.pi * note.freq * t + phaseOffset)
+                local phaseOffset = lfo * phaserDepth * math.pi
+                sample = math.sin(2 * math.pi * currentFreq * t + phaseOffset)
             end
 
-            -- Optionally apply a very short fade-out at the end of each note
-            local fadeSamples = math.floor(rate * 0.005)  -- 5ms fade-out
+            -- Fade out at the end of the note
+            local fadeSamples = math.floor(rate * 0.005)
             local fadeFactor = 1
             if i >= note.numSamples - fadeSamples then
                 fadeFactor = 1 - ((i - (note.numSamples - fadeSamples)) / fadeSamples)
             end
 
-            -- Multiply sample by note.volume (and a constant factor 0.5 and fade factor)
+            -- Apply volume and fade effect
             soundData:setSample(sampleIndex, sample * note.volume * 0.5 * fadeFactor)
             sampleIndex = sampleIndex + 1
         end
@@ -153,4 +174,5 @@ return {
     Sound = Sound,
     Pitches = Pitches,
     Waveforms = Waveforms,
+    Effects = Effects,
 }
