@@ -11,47 +11,47 @@ function love.load()
     local wave = Waveforms.square
 
     melody = {
-        { wave = wave, freq = pitches.C4, duration = 0.4, volume = 1.0 },
-        { wave = wave, freq = pitches.C4, duration = 0.4, volume = 1.0 },
-        { wave = wave, freq = pitches.G4, duration = 0.4, volume = 1.0 },
-        { wave = wave, freq = pitches.G4, duration = 0.4, volume = 0.6 },
-        { wave = wave, freq = pitches.A4, duration = 0.4, volume = 0.6 },
-        { wave = wave, freq = pitches.A4, duration = 0.4, volume = 0.4 },
-        { wave = wave, freq = pitches.G4, duration = 0.8, volume = 0.4 },
+        { wave = wave, freq = pitches.C4, volume = 1.0 },
+        { wave = wave, freq = pitches.C4, volume = 1.0 },
+        { wave = wave, freq = pitches.G4, volume = 1.0 },
+        { wave = wave, freq = pitches.G4, volume = 0.6 },
+        { wave = wave, freq = pitches.A4, volume = 0.6 },
+        { wave = wave, freq = pitches.A4, volume = 0.4 },
+        { wave = wave, freq = pitches.G4, volume = 0.4 },
     
-        { wave = wave, freq = pitches.F4, duration = 0.4, volume = 1.0 },
-        { wave = wave, freq = pitches.F4, duration = 0.4, volume = 0.2 }, 
-        { wave = wave, freq = pitches.E4, duration = 0.4, volume = 0.2 },
-        { wave = wave, freq = pitches.E4, duration = 0.4, volume = 1.0 },
-        { wave = wave, freq = pitches.D4, duration = 0.4, volume = 1.0 },
-        { wave = wave, freq = pitches.D4, duration = 0.4, volume = 1.0 },
-        { wave = wave, freq = pitches.C4, duration = 0.8, volume = 1.0 },
+        { wave = wave, freq = pitches.F4, volume = 1.0 },
+        { wave = wave, freq = pitches.F4, volume = 0.2 }, 
+        { wave = wave, freq = pitches.E4, volume = 0.2 },
+        { wave = wave, freq = pitches.E4, volume = 1.0 },
+        { wave = wave, freq = pitches.D4, volume = 1.0 },
+        { wave = wave, freq = pitches.D4, volume = 1.0 },
+        { wave = wave, freq = pitches.C4, volume = 1.0 },
     }
     
     jump_sfx = {
-        { wave = wave, freq = pitches.G3, duration = 0.05, volume = 1.0 },
-        { wave = wave, freq = pitches.D4, duration = 0.05, volume = 1.0 },
-        { wave = wave, freq = pitches.F4, duration = 0.05, volume = 0.2 },
-        { wave = wave, freq = pitches.A4, duration = 0.05, volume = 0.2 }
+        { wave = wave, freq = pitches.G3, volume = 1.0 },
+        { wave = wave, freq = pitches.D4, volume = 1.0 },
+        { wave = wave, freq = pitches.F4, volume = 0.2 },
+        { wave = wave, freq = pitches.A4, volume = 0.2 }
     }
     
     die_sfx = {
-        { wave = wave, freq = pitches.B4, duration = 0.1, volume = 1.0 },
-        { wave = wave, freq = pitches.A4, duration = 0.1, volume = 1.0 },
-        { wave = wave, freq = pitches.F4, duration = 0.1, volume = 1.0 },
-        { wave = wave, freq = pitches.D4, duration = 0.1, volume = 0.2 },
-        { wave = wave, freq = pitches.G3, duration = 0.1, volume = 0.2 }
+        { wave = wave, freq = pitches.B4, volume = 1.0 },
+        { wave = wave, freq = pitches.A4, volume = 1.0 },
+        { wave = wave, freq = pitches.F4, volume = 1.0 },
+        { wave = wave, freq = pitches.D4, volume = 0.2 },
+        { wave = wave, freq = pitches.G3, volume = 0.2 }
     }
     
     coin_sfx = {
-        { wave = wave, freq = pitches.A4, duration = 0.05, volume = 1.0 },
-        { wave = wave, freq = pitches.B4, duration = 0.05, volume = 1.0 }
+        { wave = wave, freq = pitches.A4, volume = 1.0 },
+        { wave = wave, freq = pitches.B4, volume = 1.0 }
     }    
 
     soundPlayer:add("die", die_sfx, 1)
     soundPlayer:add("melody", melody, 1)
-    soundPlayer:add("die2", die_sfx, 5)
-    soundPlayer:add("melody2", melody, 5)
+    soundPlayer:add("die2", die_sfx, 10)
+    soundPlayer:add("melody2", melody, 10)
 end
 
 function love.keypressed(key)

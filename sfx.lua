@@ -66,17 +66,15 @@ end
 function Sound:add(id, noteSequence, multiplier)
     if #noteSequence == 0 then return end
 
-    local speedMultiplier = math.max(0.5, math.min(multiplier, 5.0))
+    local speedMultiplier = math.max(1, math.min(multiplier, 10))
     local rate = 44100
     local totalSamples = 0
     local sequence = {}
 
-    -- Preprocess each note: adjust duration to full cycles and compute effective duration.
     for _, note in ipairs(noteSequence) do
         local cycleDuration = 1 / note.freq
-        local adjustedDuration = math.floor(note.duration / cycleDuration) * cycleDuration
+        local adjustedDuration = math.floor(0.5 / cycleDuration) * cycleDuration
         if adjustedDuration == 0 then adjustedDuration = cycleDuration end
-        -- Scale the note duration by the speed multiplier (playing faster if multiplier > 1)
         local effectiveDuration = adjustedDuration / speedMultiplier
         local numSamples = math.floor(rate * effectiveDuration)
         totalSamples = totalSamples + numSamples
