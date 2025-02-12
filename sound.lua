@@ -7,7 +7,8 @@ function Sound:new()
         sequence = {},
         currentIndex = 1,
         timer = 0,
-        isPlayingSequence = false
+        isPlayingSequence = false,
+        speedMultiplier = 1.0  -- Default playback speed
     }
     setmetatable(obj, self)
     self.__index = self
@@ -67,15 +68,15 @@ function Sound:stop()
     self.sequence = {}
 end
 
-function Sound:playSequence(noteSequence)
+function Sound:playSequence(noteSequence, multiplier)
     if #noteSequence == 0 then return end
 
     self.sequence = {}
+    self.speedMultiplier = math.max(0.5, math.min(multiplier, 5.0))
 
     -- Adjust each note's duration to fit full cycles
     for _, note in ipairs(noteSequence) do
         local cycleDuration = 1 / note.freq
-        
         local adjustedDuration = math.floor(note.duration / cycleDuration) * cycleDuration
         if adjustedDuration == 0 then adjustedDuration = cycleDuration end  -- Ensure at least one cycle
 
@@ -93,11 +94,11 @@ end
 
 function Sound:update(dt)
     if self.isPlayingSequence and #self.sequence > 0 then
-        self.timer = self.timer - dt
+        self.timer = self.timer - (dt * self.speedMultiplier)  -- Adjust timing by speed
         if self.timer <= 0 then
             local note = self.sequence[self.currentIndex]
             self:play(note.wave, note.freq, note.duration)
-            self.timer = note.duration
+            self.timer = note.duration / self.speedMultiplier  -- Adjust duration by speed
             self.currentIndex = self.currentIndex + 1
 
             if self.currentIndex > #self.sequence then

@@ -24,12 +24,32 @@ function love.load()
         { wave = "sine", freq = 293.66, duration = 0.4 }, -- D4
         { wave = "sine", freq = 261.63, duration = 0.8 }, -- C4 (longer)
     }
+
+    jump_sfx = {
+        { wave = "sine", freq = 200.00, duration = 0.05 },
+        { wave = "sine", freq = 300.00, duration = 0.05 },
+        { wave = "sine", freq = 400.00, duration = 0.05 },
+        { wave = "sine", freq = 500.00, duration = 0.05 }
+    }
+
+    die_sfx = {
+        { wave = "sine", freq = 600.00, duration = 0.1 },
+        { wave = "sine", freq = 500.00, duration = 0.1 },
+        { wave = "sine", freq = 400.00, duration = 0.1 },
+        { wave = "sine", freq = 300.00, duration = 0.1 },
+        { wave = "sine", freq = 200.00, duration = 0.1 }
+    }    
+    
+    coin_sfx = {
+        { wave = "sine", freq = 800.00, duration = 0.05 },
+        { wave = "sine", freq = 1000.00, duration = 0.05 }
+    }
     
 end
 
 function love.keypressed(key)
     if key == "p" then
-        soundPlayer:playSequence(melody) -- Play the sequence
+        soundPlayer:playSequence(coin_sfx, 2) -- Play the sequence
     elseif key == "s" then
         soundPlayer:stop() -- Stop playing
     end
