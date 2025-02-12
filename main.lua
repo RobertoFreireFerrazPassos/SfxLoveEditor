@@ -49,7 +49,7 @@ end
 
 function love.keypressed(key)
     if key == "p" then
-        soundPlayer:playSequence(melody, 2) -- Play the sequence
+        soundPlayer:playSequence(melody, 5) -- Play the sequence
     elseif key == "s" then
         soundPlayer:stop() -- Stop playing
     end
@@ -57,4 +57,11 @@ end
 
 function love.update(dt)
     soundPlayer:update(dt)
+end
+
+function love.draw()
+    love.graphics.print(soundPlayer.timer,10,10);
+    love.graphics.print(tostring(soundPlayer.isPlayingSequence),10,30);
+    love.graphics.print(#soundPlayer.sequence,10,50);
+    love.graphics.print(soundPlayer.currentIndex,10,70);
 end
