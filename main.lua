@@ -49,7 +49,7 @@ end
 
 function love.keypressed(key)
     if key == "p" then
-        soundPlayer:playSequence(coin_sfx, 2) -- Play the sequence
+        soundPlayer:playSequence(melody, 2) -- Play the sequence
     elseif key == "s" then
         soundPlayer:stop() -- Stop playing
     end

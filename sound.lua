@@ -2,7 +2,6 @@ local Sound = {}
 
 function Sound:new()
     local obj = {
-        sources = {},
         currentSound = nil,
         sequence = {},
         currentIndex = 1,
@@ -55,7 +54,6 @@ function Sound:play(waveType, freq, duration)
     source:play()
     
     self.currentSound = source
-    table.insert(self.sources, source)
 end
 
 function Sound:stop()
