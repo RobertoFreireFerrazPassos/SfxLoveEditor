@@ -49,22 +49,20 @@ function love.load()
     }    
 
     soundPlayer:add("die", die_sfx, 1)
-    soundPlayer:add("melody", melody, 1)
-    soundPlayer:add("die2", die_sfx, 10)
-    soundPlayer:add("melody2", melody, 10)
+    soundPlayer:add("die2", die_sfx, 3)
+    soundPlayer:add("die3", die_sfx, 6)
+    soundPlayer:add("die4", die_sfx, 10)
 end
 
 function love.keypressed(key)
     if key == "q" then
         soundPlayer:play("die")
     elseif key == "w" then
-        soundPlayer:play("melody")
-    elseif key == "a" then
         soundPlayer:play("die2")
+    elseif key == "a" then
+        soundPlayer:play("die3")
     elseif key == "s" then
-        soundPlayer:play("melody2")
-    elseif key == "e" then
-        soundPlayer:stop("melody") -- Stop playing "melody"
+        soundPlayer:play("die4")
     end
 end
 
