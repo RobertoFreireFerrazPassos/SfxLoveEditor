@@ -55,6 +55,21 @@ function Sound:add(id, noteSequence, multiplier)
                 sample = 2 * (t * note.freq - math.floor(t * note.freq + 0.5))
             elseif note.wave == "noise" then
                 sample = love.math.random() * 2 - 1
+            elseif note.wave == "pulse" then
+                local duty = note.duty or 0.5
+                local phase = (t * note.freq) % 1
+                sample = (phase < duty) and 1 or -1
+            elseif note.wave == "organ" then
+                local fundamental = math.sin(2 * math.pi * note.freq * t)
+                local secondHarmonic = 0.5 * math.sin(2 * math.pi * note.freq * 2 * t)
+                local thirdHarmonic = 0.33 * math.sin(2 * math.pi * note.freq * 3 * t)
+                sample = (fundamental + secondHarmonic + thirdHarmonic) / (1 + 0.5 + 0.33)
+            elseif note.wave == "phaser" then
+                local phaserSpeed = note.phaserSpeed or 0.5   -- LFO frequency in Hz
+                local phaserDepth = note.phaserDepth or 0.5     -- Maximum phase offset (0-1)
+                local lfo = math.sin(2 * math.pi * phaserSpeed * t)
+                local phaseOffset = lfo * phaserDepth * math.pi -- Scale offset by pi
+                sample = math.sin(2 * math.pi * note.freq * t + phaseOffset)
             end
 
             -- Optionally apply a very short fade-out at the end of each note
