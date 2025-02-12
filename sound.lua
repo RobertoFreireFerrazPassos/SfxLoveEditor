@@ -23,6 +23,7 @@ function Sound:generateSound(waveType, freq, duration)
         local t = i / rate
         local sample = 0
         
+        -- Waveform generation
         if waveType == "sine" then
             sample = math.sin(2 * math.pi * freq * t)
         elseif waveType == "square" then
@@ -32,8 +33,16 @@ function Sound:generateSound(waveType, freq, duration)
         elseif waveType == "noise" then
             sample = love.math.random() * 2 - 1
         end
+
+        -- Apply fade-out effect: volume decreases towards the end of the sound
+        local fadeOutStart = numSamples - (rate * 0.1)  -- Start fading out 0.1 seconds before the end
+        local fadeFactor = 1
         
-        soundData:setSample(i, sample * 0.5) -- Volume control
+        if i >= fadeOutStart then
+            fadeFactor = 1 - ((i - fadeOutStart) / (numSamples - fadeOutStart))
+        end
+        
+        soundData:setSample(i, sample * 0.5 * fadeFactor) -- Volume control with fade-out
     end
     
     return soundData
