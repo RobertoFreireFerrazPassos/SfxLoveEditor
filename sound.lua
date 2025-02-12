@@ -49,10 +49,9 @@ function Sound:generateSound(waveType, freq, duration)
     return soundData
 end
 
-function Sound:play(waveType, freq, duration, loop)
+function Sound:play(waveType, freq, duration)
     local soundData = self:generateSound(waveType, freq, duration)
     local source = love.audio.newSource(soundData, "static")
-    source:setLooping(loop or false)
     source:play()
     
     self.currentSound = source
