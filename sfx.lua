@@ -1,9 +1,62 @@
 local Sound = {}
 
+local Waveforms = {
+    sine = "sine",
+    square = "square",
+    saw = "saw",
+    noise = "noise",
+    pulse =  "pulse",
+    organ = "organ",
+    phaser = "phaser",
+}
+
+local Pitches = {
+    -- Octave 2
+    C2 = 65,    -- C-2
+    Cs2 = 69,   -- C#2/Db2
+    D2 = 73,    -- D-2
+    Ds2 = 78,   -- D#2/Eb2
+    E2 = 82,    -- E-2
+    F2 = 87,    -- F-2
+    Fs2 = 93,   -- F#2/Gb2
+    G2 = 98,    -- G-2
+    Gs2 = 104,  -- G#2/Ab2
+    A2 = 110,   -- A-2
+    As2 = 117,  -- A#2/Bb2
+    B2 = 123,   -- B-2
+
+    -- Octave 3
+    C3 = 131,   -- C-3
+    Cs3 = 139,  -- C#3/Db3
+    D3 = 147,   -- D-3
+    Ds3 = 156,  -- D#3/Eb3
+    E3 = 165,   -- E-3
+    F3 = 175,   -- F-3
+    Fs3 = 185,  -- F#3/Gb3
+    G3 = 196,   -- G-3
+    Gs3 = 208,  -- G#3/Ab3
+    A3 = 220,   -- A-3
+    As3 = 233,  -- A#3/Bb3
+    B3 = 247,   -- B-3
+
+    -- Octave 4
+    C4 = 262,   -- C-4
+    Cs4 = 277,  -- C#4/Db4
+    D4 = 294,   -- D-4
+    Ds4 = 311,  -- D#4/Eb4
+    E4 = 330,   -- E-4
+    F4 = 349,   -- F-4
+    Fs4 = 370,  -- F#4/Gb4
+    G4 = 392,   -- G-4
+    Gs4 = 415,  -- G#4/Ab4
+    A4 = 440,   -- A-4
+    As4 = 466,  -- A#4/Bb4
+    B4 = 494,   -- B-4
+}
+
 function Sound:new()
     local obj = {
         sounds = {},
-        currentSound = nil,
     }
     setmetatable(obj, self)
     self.__index = self
@@ -90,14 +143,14 @@ end
 
 function Sound:play(id)    
     self.sounds[id]:play()
-    self.currentSound = id
 end
 
-function Sound:stop()
-    if self.currentSound then
-        self.sounds[self.currentSound]:stop()
-    end
-    self.currentSound = nil
+function Sound:stop(id)
+    self.sounds[id]:stop()
 end
 
-return Sound
+return {
+    Sound = Sound,
+    Pitches = Pitches,
+    Waveforms = Waveforms,
+}
