@@ -83,6 +83,7 @@ function Sound:add(id, noteSequence, multiplier)
 
     for i, note in ipairs(noteSequence) do
         local prevNote = noteSequence[i - 1]  -- Get the previous note (if it exists)
+        local nextNote = (i < #noteSequence) and noteSequence[i + 1] or note
         local cycleDuration = 1 / note.freq
         local adjustedDuration = math.floor(0.5 / cycleDuration) * cycleDuration
         if adjustedDuration == 0 then adjustedDuration = cycleDuration end
@@ -95,9 +96,10 @@ function Sound:add(id, noteSequence, multiplier)
             freq = note.freq,
             duration = effectiveDuration,
             numSamples = numSamples,
-            volume = note.volume or 1.0,
-            effect = note.effect or 0, -- Use the effect parameter (default to 0)
-            prevFreq = prevNote and prevNote.freq or note.freq, -- Store previous frequency for sliding
+            volume = note.volume or 1,
+            effect = note.effect or 0,
+            prevFreq = prevNote and prevNote.freq or note.freq,
+            nextFreq = nextNote.freq,
         })
     end
 
@@ -110,12 +112,29 @@ function Sound:add(id, noteSequence, multiplier)
         for i = 0, note.numSamples - 1 do
             local t = i / rate
             local sample = 0
-
-            -- Determine the frequency (apply slide effect if effect == 1)
+            local sampleVolume = note.volume
             local currentFreq = note.freq
+
+            -- Apply effects
             if note.effect == Effects.Slide then
-                local slideFactor = i / note.numSamples
-                currentFreq = note.prevFreq + (note.freq - note.prevFreq) * slideFactor
+                currentFreq = note.prevFreq + (note.freq - note.prevFreq) * (i / note.numSamples)
+            elseif note.effect == Effects.Vibrato then
+                currentFreq = note.freq * (1 + 0.02 * math.sin(20 * math.pi * t))
+            elseif note.effect == Effects.Drop then
+                currentFreq = note.freq * (1 - (i / note.numSamples))
+            elseif note.effect == Effects.FadeIn then
+                sampleVolume = note.volume * (i / note.numSamples)
+            elseif note.effect == Effects.FadeOut then
+                sampleVolume = note.volume * (1 - (i / note.numSamples))
+            elseif note.effect == Effects.Arpeggio then
+                local arpCycle = (i / (note.numSamples / 3)) % 3
+                if arpCycle < 1 then
+                    currentFreq =  note.prevFreq
+                elseif arpCycle < 2 then
+                    currentFreq = note.freq
+                else
+                    currentFreq = note.nextFreq
+                end
             end
 
             -- Waveform generation
@@ -154,7 +173,7 @@ function Sound:add(id, noteSequence, multiplier)
             end
 
             -- Apply volume and fade effect
-            soundData:setSample(sampleIndex, sample * note.volume * 0.5 * fadeFactor)
+            soundData:setSample(sampleIndex, sample * sampleVolume * 0.5 * fadeFactor)
             sampleIndex = sampleIndex + 1
         end
     end

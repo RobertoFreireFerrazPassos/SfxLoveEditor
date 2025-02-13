@@ -38,10 +38,10 @@ function love.load()
     
     die_sfx = {
         { wave = wave, freq = pitches.B4, volume = 1.0, effect = Effects.None },
-        { wave = wave, freq = pitches.A4, volume = 1.0, effect = Effects.Slide },
-        { wave = wave, freq = pitches.F4, volume = 1.0, effect = Effects.Slide },
-        { wave = wave, freq = pitches.D4, volume = 1, effect = Effects.None },
-        { wave = wave, freq = pitches.G3, volume = 1, effect = Effects.None }
+        { wave = wave, freq = pitches.A4, volume = 1.0, effect = Effects.Arpeggio },
+        { wave = wave, freq = pitches.F4, volume = 1.0, effect = Effects.Arpeggio },
+        { wave = wave, freq = pitches.D4, volume = 1, effect = Effects.Arpeggio },
+        { wave = wave, freq = pitches.G3, volume = 1, effect = Effects.Vibrato }
     }
     
     coin_sfx = {
