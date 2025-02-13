@@ -89,7 +89,7 @@ function createSoundEffect()
 
     for i = 1, 10 do
         local note = scale[love.math.random(#scale)]
-        local freq = pitches[note .. "2"] -- Use octave 4 notes
+        local freq = pitches[note .. "4"] -- Use octave 4 notes
 
         table.insert(soundEffect, {
             wave = wave,
