@@ -37,11 +37,11 @@ function love.load()
     }
     
     die_sfx = {
-        { wave = wave, freq = pitches.B4, volume = 1.0, effect = Effects.None },
-        { wave = wave, freq = pitches.A4, volume = 1.0, effect = Effects.FadeOut },
-        { wave = wave, freq = pitches.F4, volume = 1.0, effect = Effects.FadeOut },
-        { wave = wave, freq = pitches.D4, volume = 1, effect = Effects.None },
-        { wave = wave, freq = pitches.G3, volume = 1, effect = Effects.None }
+        { wave = wave, freq = pitches.B2, volume = 1.0, effect = Effects.None },
+        { wave = wave, freq = pitches.A2, volume = 1.0, effect = Effects.Vibrato },
+        { wave = wave, freq = pitches.F2, volume = 1.0, effect = Effects.Vibrato },
+        { wave = wave, freq = pitches.D2, volume = 1, effect = Effects.Arpeggio },
+        { wave = wave, freq = pitches.G2, volume = 1, effect = Effects.Arpeggio }
     }
     
     coin_sfx = {
@@ -49,7 +49,7 @@ function love.load()
         { wave = wave, freq = pitches.B4, volume = 1.0 }
     }    
 
-    soundPlayer:add("die", melody, 1)
+    soundPlayer:add("die", die_sfx, 1)
     soundPlayer:add("die2", die_sfx, 3)
     soundPlayer:add("die3", die_sfx, 6)
     soundPlayer:add("die4", die_sfx, 10)
