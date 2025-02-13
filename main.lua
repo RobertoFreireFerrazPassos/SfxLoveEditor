@@ -6,6 +6,7 @@ local Sound = sfx.Sound
 local pitches = sfx.Pitches
 local Waveforms = sfx.Waveforms
 local Effects = sfx.Effects
+local Pentatonic = sfx.Pentatonic
 
 function love.load()
     soundPlayer = Sound:new()
@@ -61,11 +62,42 @@ function love.keypressed(key)
     elseif key == "w" then
         soundPlayer:play("die2")
     elseif key == "a" then
-        soundPlayer:play("die3")
+        local sfx = createSoundEffect()
+        soundPlayer:add("random_sfx", sfx, 1) -- Assuming you have a Sound:add function
+        soundPlayer:play("random_sfx")
     elseif key == "s" then
         soundPlayer:play("die4")
     end
 end
 
 function love.update(dt)
+end
+
+function getRandomPentatonic()
+    local keys = {}
+    for key in pairs(Pentatonic) do
+        table.insert(keys, key)
+    end
+    local randomScale = Pentatonic[keys[love.math.random(#keys)]]
+    return randomScale
+end
+
+function createSoundEffect()
+    local scale = getRandomPentatonic()
+    local wave = Waveforms.square
+    local soundEffect = {}
+
+    for i = 1, 10 do
+        local note = scale[love.math.random(#scale)]
+        local freq = pitches[note .. "2"] -- Use octave 4 notes
+
+        table.insert(soundEffect, {
+            wave = wave,
+            freq = freq,
+            volume = 1.0,
+            effect = Effects.None
+        })
+    end
+
+    return soundEffect
 end
