@@ -10,6 +10,33 @@ local Waveforms = {
     phaser = "phaser",
 }
 
+local Pentatonic = {
+    CMajor = {"C", "D", "E", "G", "A"},
+    CsMajor = {"Cs", "Ds", "F", "Gs", "As"},
+    DMajor = {"D", "E", "Fs", "A", "B"},
+    DsMajor = {"Ds", "F", "G", "As", "C"},
+    EMajor = {"E", "Fs", "Gs", "B", "Cs"},
+    FMajor = {"F", "G", "A", "C", "D"},
+    FsMajor = {"Fs", "Gs", "As", "Cs", "Ds"},
+    GMajor = {"G", "A", "B", "D", "E"},
+    GsMajor = {"Gs", "As", "C", "Ds", "F"},
+    AMajor = {"A", "B", "Cs", "E", "Fs"},
+    AsMajor = {"As", "C", "D", "F", "G"},
+    BMajor = {"B", "Cs", "Ds", "Fs", "Gs"},
+    CMinor = {"C", "Ds", "F", "G", "As"},
+    CsMinor = {"Cs", "E", "Fs", "A", "B"},
+    DMinor = {"D", "F", "G", "A", "C"},
+    DsMinor = {"Ds", "Fs", "Gs", "As", "Cs"},
+    EMinor = {"E", "G", "A", "B", "D"},
+    FMinor = {"F", "Gs", "As", "C", "Ds"},
+    FsMinor = {"Fs", "A", "B", "Cs", "E"},
+    GMinor = {"G", "As", "C", "D", "F"},
+    GsMinor = {"Gs", "B", "Cs", "Ds", "Fs"},
+    AMinor = {"A", "C", "D", "E", "G"},
+    AsMinor = {"As", "Cs", "Ds", "F", "Gs"},
+    BMinor = {"B", "D", "E", "Fs", "A"}  
+}
+
 local Pitches = {
     -- Octave 2
     C2 = 65,    -- C-2
@@ -208,4 +235,5 @@ return {
     Pitches = Pitches,
     Waveforms = Waveforms,
     Effects = Effects,
+    Pentatonic = Pentatonic,
 }
