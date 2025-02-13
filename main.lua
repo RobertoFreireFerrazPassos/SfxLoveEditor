@@ -15,18 +15,18 @@ function love.load()
         { wave = wave, freq = pitches.C4, volume = 1.0 },
         { wave = wave, freq = pitches.C4, volume = 1.0 },
         { wave = wave, freq = pitches.G4, volume = 1.0 },
-        { wave = wave, freq = pitches.G4, volume = 0.6 },
-        { wave = wave, freq = pitches.A4, volume = 0.6 },
+        { wave = wave, freq = pitches.G4, volume = 0.6, effect = Effects.FadeOut },
+        { wave = wave, freq = pitches.A4, volume = 0.6, effect = Effects.None },
         { wave = wave, freq = pitches.A4, volume = 0.4 },
         { wave = wave, freq = pitches.G4, volume = 0.4 },
     
         { wave = wave, freq = pitches.F4, volume = 1.0 },
         { wave = wave, freq = pitches.F4, volume = 0.2 }, 
-        { wave = wave, freq = pitches.E4, volume = 0.2 },
+        { wave = wave, freq = pitches.E4, volume = 0.2, effect = Effects.Drop },
         { wave = wave, freq = pitches.E4, volume = 1.0 },
+        { wave = wave, freq = pitches.D4, volume = 1.0, effect = Effects.Slide },
         { wave = wave, freq = pitches.D4, volume = 1.0 },
-        { wave = wave, freq = pitches.D4, volume = 1.0 },
-        { wave = wave, freq = pitches.C4, volume = 1.0 },
+        { wave = wave, freq = pitches.C4, volume = 1.0, effect = Effects.Arpeggio },
     }
     
     jump_sfx = {
@@ -38,10 +38,10 @@ function love.load()
     
     die_sfx = {
         { wave = wave, freq = pitches.B4, volume = 1.0, effect = Effects.None },
-        { wave = wave, freq = pitches.A4, volume = 1.0, effect = Effects.Arpeggio },
-        { wave = wave, freq = pitches.F4, volume = 1.0, effect = Effects.Arpeggio },
-        { wave = wave, freq = pitches.D4, volume = 1, effect = Effects.Arpeggio },
-        { wave = wave, freq = pitches.G3, volume = 1, effect = Effects.Vibrato }
+        { wave = wave, freq = pitches.A4, volume = 1.0, effect = Effects.FadeOut },
+        { wave = wave, freq = pitches.F4, volume = 1.0, effect = Effects.FadeOut },
+        { wave = wave, freq = pitches.D4, volume = 1, effect = Effects.None },
+        { wave = wave, freq = pitches.G3, volume = 1, effect = Effects.None }
     }
     
     coin_sfx = {
@@ -49,7 +49,7 @@ function love.load()
         { wave = wave, freq = pitches.B4, volume = 1.0 }
     }    
 
-    soundPlayer:add("die", die_sfx, 1)
+    soundPlayer:add("die", melody, 1)
     soundPlayer:add("die2", die_sfx, 3)
     soundPlayer:add("die3", die_sfx, 6)
     soundPlayer:add("die4", die_sfx, 10)
